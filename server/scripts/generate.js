@@ -10,6 +10,7 @@ console.debug(`Private key: ${toHex(privateKey)}`);
 
 const publicKey = secp.getPublicKey(privateKey);
 
+// TODO maybe fix the public key creation
 console.debug(`Public key (eth version): 0x${keccak256(publicKey.slice(1)).slice(-20).join("")}`);
 
 module.exports = {
