@@ -2,6 +2,9 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 3042;
+const  secp = require("ethereum-cryptography/secp256k1");
+const { keccak256 } = require("ethereum-cryptography/keccak");
+const { toHex } = require("ethereum-cryptography/utils");
 // Add generate module with accounts array
 const generate = require("./scripts/generate")
 
@@ -23,7 +26,15 @@ app.get("/balance/:address", (req, res) => {
 });
 
 app.post("/send", (req, res) => {
-  const { sender, recipient, amount } = req.body;
+  // add sender private key from req of Transfer component
+  const { sender, senderPK, recipient, amount } = req.body;
+
+  const retrivedPubKey = secp.getPublicKey(senderPK);
+  const publicKey = `0x${keccak256(retrivedPubKey.slice(1)).slice(-20).join("")}`;
+
+  if (publicKey != sender) {
+    res.status(400).send({message: "Not an owner of Private Key"})
+  }
 
   setInitialBalance(sender);
   setInitialBalance(recipient);
@@ -38,7 +49,7 @@ app.post("/send", (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Listening on port ${port}!`);
+  console.log(`\nListening on port ${port}!`);
 });
 
 function setInitialBalance(address) {

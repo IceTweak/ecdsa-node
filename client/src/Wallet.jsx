@@ -1,7 +1,6 @@
 import server from "./server";
 import * as secp from "ethereum-cryptography/secp256k1";
-import { keccak256 } from "ethereum-cryptography/keccak";
-import { toHex } from "ethereum-cryptography/utils"
+import { keccak256 } from "ethereum-cryptography/keccak"
 
 function Wallet({ address, setAddress, balance, setBalance, privateKey, setPrivateKey }) {
   async function onChange(evt) {
@@ -9,9 +8,10 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
     setPrivateKey(privateKey);
 
     // Derive public key from private key
-    const address = "0x" + keccak256(
+    // TODO: getPublicKey throws Error (see browser console logs)
+    const address = `0x${keccak256(
       secp.getPublicKey(privateKey).slice(1)
-    ).slice(-20).join("");
+    ).slice(-20).join("")}`;
 
     setAddress(address);
     if (address) {
