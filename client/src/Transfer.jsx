@@ -2,7 +2,7 @@ import { useState } from "react";
 import server from "./server";
 
 // Add privateKey to component props for ability
-// to get it on server post(/send) request
+// to get it on server post(/send) request 
 function Transfer({ address, setBalance, privateKey }) {
   const [sendAmount, setSendAmount] = useState("");
   const [recipient, setRecipient] = useState("");
@@ -12,6 +12,7 @@ function Transfer({ address, setBalance, privateKey }) {
   async function transfer(evt) {
     evt.preventDefault();
 
+    // TODO - send a signature not an private key, and derive public key from it
     try {
       const {
         data: { balance },
