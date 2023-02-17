@@ -6,13 +6,20 @@ function Wallet({ address, setAddress, balance, setBalance, privateKey, setPriva
   async function onChange(evt) {
     const privateKey = evt.target.value;
     setPrivateKey(privateKey);
-
+    
     // Derive public key from private key
-    // TODO: getPublicKey throws Error (see browser console logs)
-    const address = `0x${keccak256(
-      secp.getPublicKey(privateKey).slice(1)
-    ).slice(-20).join("")}`;
-
+    let address;
+    try {
+      address = `0x${keccak256(
+        secp.getPublicKey(
+          privateKey
+        )
+        .slice(1))
+      .slice(-20)
+      .join("")}`;
+    } catch {
+      address = "Not an 32 bytes PK";
+    }
     setAddress(address);
     if (address) {
       const {
