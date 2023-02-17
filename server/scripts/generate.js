@@ -11,9 +11,9 @@ for (let i = 0; i < accountsLen; i++) {
 
     // write object to array
     accounts.push({
-        "publicKey": `0x${keccak256(publicKey.slice(1)).slice(-20).join("")}`,
-        "privateKey": `${toHex(privateKey)}`,
-        "value": Math.random() * 100,
+        'publicKey': `0x${keccak256(publicKey.slice(1)).slice(-20).join("")}`,
+        'privateKey': `${toHex(privateKey)}`,
+        'value': Math.random() * 100,
     });
 }
 
