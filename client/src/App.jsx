@@ -9,13 +9,16 @@ function App() {
 
   return (
     <div className="app">
-      <Wallet
-        balance={balance}
-        setBalance={setBalance}
-        account={account}
-        setAccount={setAccount}
-      />
-      <Transfer setBalance={setBalance} account={account} />
+      <h1 className="title">ECDSA Signature Node</h1>
+      <div className="window-container">
+        <Wallet
+          balance={balance}
+          setBalance={setBalance}
+          account={account}
+          setAccount={setAccount}
+        />
+        <Transfer setBalance={setBalance} account={account} />
+      </div>
     </div>
   );
 }

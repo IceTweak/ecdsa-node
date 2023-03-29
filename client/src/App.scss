@@ -14,12 +14,35 @@ label {
   color: #222;
 }
 
+h1 {
+  font-size: 3rem;
+  font-weight: 700;
+  background: -webkit-linear-gradient(0deg, rgba(47,218,119,1) 0%, rgba(253,187,45,1) 100%);
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  -webkit-text-stroke: 1px #000;
+}
+
+.title {
+  text-align: center;
+  letter-spacing: 0.01rem;
+  font-size: 4rem;
+  font-weight: 900;
+}
+
 .app {
   display: flex;
+  flex-direction: column;
   max-width: 1400px;
   flex-wrap: wrap;
   gap: 12px;
   margin: 0 auto;
+}
+
+.window-container {
+  display: flex;
+  flex-direction: row;
 }
 
 .container {
