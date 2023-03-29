@@ -2,49 +2,43 @@ const express = require("express");
 const app = express();
 const cors = require("cors");
 const port = 3042;
-const  secp = require("ethereum-cryptography/secp256k1");
-const { keccak256 } = require("ethereum-cryptography/keccak");
-const { toHex } = require("ethereum-cryptography/utils");
-// Add generate module with accounts array
-const generate = require("./scripts/generate")
+const crypto = require("./crypto");
 
 app.use(cors());
 app.use(express.json());
 
-const balances = {};
-const accounts = generate.accounts;
+const balances = new Map();
 
-// Map balances to public keys of holders
-accounts.map((obj) => {
-  balances[obj.publicKey] = obj.value;
+app.post('/deposit', (req, res) => {
+  const { account, balance } = req.body;
+  balances.set(account, balance);
 });
 
-app.get("/balance/:address", (req, res) => {
-  const { address } = req.params;
-  const balance = balances[address] || 0;
+
+app.get("/balance/:account", (req, res) => {
+  const { account } = req.params;
+  const balance = balances.get(account) || 0;
   res.send({ balance });
 });
 
 app.post("/send", (req, res) => {
-  // add sender private key from req of Transfer component
-  const { sender, senderPK, recipient, amount } = req.body;
+  const { message, signature } = req.body;
+  const { recipient, amount } = message;
 
-  const retrivedPubKey = secp.getPublicKey(senderPK);
-  const publicKey = `0x${keccak256(retrivedPubKey.slice(1)).slice(-20).join("")}`;
-
-  if (publicKey != sender) {
-    res.status(400).send({message: "Not an owner of Private Key"})
-  }
+  // Retrive public key from signature
+  const publicKey = crypto.signatureToPublicKey(message, signature);
+  console.log(publicKey);
+  const sender = crypto.publicKeyToAccount(publicKey);
 
   setInitialBalance(sender);
   setInitialBalance(recipient);
 
-  if (balances[sender] < amount) {
+  if (balances.get(sender) < amount) {
     res.status(400).send({ message: "Not enough funds!" });
   } else {
-    balances[sender] -= amount;
-    balances[recipient] += amount;
-    res.send({ balance: balances[sender] });
+    balances.set(sender, balances.get(sender) - amount);
+    balances.set(recipient, balances.get(recipient) + amount);
+    res.send({ balance: balances.get(sender) });
   }
 });
 
